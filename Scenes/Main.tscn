@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dhojdob14rc5u"]
+
+[ext_resource type="PackedScene" uid="uid://dwid3ie2v2t60" path="res://Player/Player.tscn" id="1_r150o"]
+
+[sub_resource type="Environment" id="Environment_c1w88"]
+ambient_light_source = 2
+ambient_light_energy = 0.1
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.22350436, 0.24595794, 0.28089505, 1)
+fog_density = 0.02
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r150o"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_idj7w"]
+size = Vector3(20, 1, 20)
+
+[node name="Main" type="Node3D" unique_id=1243551965]
+
+[node name="World" type="Node3D" parent="." unique_id=1143953887]
+
+[node name="PlayerSpawn" type="Node3D" parent="." unique_id=2085908481]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Player" parent="PlayerSpawn" unique_id=2341688 instance=ExtResource("1_r150o")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=869707311]
+transform = Transform3D(1, 0, 0, 0, -0.42261833, 0.90630776, 0, -0.90630776, -0.42261833, 0, 0, 0)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="DirectionalLight3D" unique_id=1709105388]
+environment = SubResource("Environment_c1w88")
+
+[node name="Base" type="StaticBody3D" parent="." unique_id=1937125473]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Base" unique_id=707523591]
+shape = SubResource("BoxShape3D_r150o")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Base" unique_id=1063358565]
+mesh = SubResource("BoxMesh_idj7w")
