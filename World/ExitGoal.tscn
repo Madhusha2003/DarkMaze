@@ -1,9 +1,25 @@
 [gd_scene format=3 uid="uid://cp18v1tnct8wc"]
 
+[ext_resource type="Script" uid="uid://cn5810krcn5m4" path="res://Scripts/exit_goal.gd" id="1_jia6m"]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_dgb5g"]
 size = Vector3(2, 4, 2)
 
-[node name="ExitGoal" type="StaticBody3D" unique_id=570701142]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgb5g"]
+albedo_color = Color(0, 0.9098039, 0.46666667, 1)
+
+[sub_resource type="TextMesh" id="TextMesh_jia6m"]
+material = SubResource("StandardMaterial3D_dgb5g")
+text = "EXIT"
+font_size = 80
+uppercase = true
+
+[node name="ExitGoal" type="Area3D" unique_id=570535352]
+script = ExtResource("1_jia6m")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=950821767]
 shape = SubResource("BoxShape3D_dgb5g")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1388658191]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("TextMesh_jia6m")

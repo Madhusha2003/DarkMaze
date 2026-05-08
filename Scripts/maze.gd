@@ -13,6 +13,7 @@ const EXIT_SCENE = preload("res://World/ExitGoal.tscn")
 @export var doors = 10
 
 var maze = []
+var exits: Array = []
 var exit_cell: Vector2i
 
 func _ready():
@@ -24,7 +25,8 @@ func generate_maze():
 	initialize_grid()
 	carve_passages(1, 1)
 	create_loops(maze_width * maze_height / loops)
-	add_random_exit()
+	for i in range(3):
+		add_random_exit()
 	spawn_doors(doors)
 	build_maze()
 
@@ -104,6 +106,13 @@ func spawn_exit():
 		0,
 		exit_cell.y * wall_spacing
 	)
+	exit.player_won.connect(_on_exit_triggered)
+	exits.append(exit)
+
+signal player_won_global
+
+func _on_exit_triggered():
+	emit_signal("player_won_global")
 
 func build_maze():
 	for x in range(maze_width):

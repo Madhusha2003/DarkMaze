@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bbjcbjhhlx46w"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4i1qi"]
+size = Vector2(1, 1)
+
+[node name="Celling" type="Node3D" unique_id=1480429824]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=757241325]
+mesh = SubResource("PlaneMesh_4i1qi")

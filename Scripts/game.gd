@@ -6,10 +6,11 @@ extends Node3D
 
 @export var dev_mode = false
 
+
 func _ready():
 	world.generate_maze()
 	spawn_player()
-
+	connect_maze_signals()
 	player.dev_fly_mode = dev_mode
 
 func _input(event):
@@ -19,11 +20,12 @@ func _input(event):
 			export_current_maze()
 		if event.keycode == KEY_R: # Press 'R' to regenerate
 			world.generate_maze()
+			connect_maze_signals()
 			spawn_player()
 		if event.keycode == KEY_SPACE: # Fly mode
-			player.global_position += Vector3(0, 5, 0) # Move player up by 5 units for testing
+			player.global_position += Vector3(0, 2, 0) # Move player up by 5 units for testing
 		if event.keycode == KEY_CTRL:
-			player.global_position -= Vector3(0, 5, 0) # Move player down by 5 units for testing
+			player.global_position -= Vector3(0, 2, 0) # Move player down by 5 units for testing
 
 func export_current_maze():
 	# Find the maze inside the World node
@@ -39,3 +41,14 @@ func spawn_player():
 		1,
 		position.z
 	)
+func connect_maze_signals():
+	var maze = world.get_child(0)
+	if maze:
+		maze.player_won_global.connect(_on_player_win)
+
+func _on_player_win():
+	win_maze()
+
+func win_maze():
+	print("Congratulations! You've reached the exit!")
+	
