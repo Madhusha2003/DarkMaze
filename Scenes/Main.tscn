@@ -10,6 +10,7 @@
 [sub_resource type="Environment" id="Environment_c1w88"]
 ambient_light_source = 2
 ambient_light_energy = 0.1
+ssao_enabled = true
 fog_enabled = true
 fog_mode = 1
 fog_light_color = Color(0.22350436, 0.24595794, 0.28089505, 1)
@@ -45,6 +46,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=869707311]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
+visible = false
 light_energy = 0.5
 shadow_enabled = true
 

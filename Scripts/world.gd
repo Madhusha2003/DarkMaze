@@ -26,7 +26,7 @@ func update_world_size():
 	maze_floor.position = center + Vector3(0, 0, 0)
 	maze_floor.scale = Vector3(size_x, 1, size_z)
 
-	maze_roof.position = center + Vector3(0, 4.01, 0)
+	maze_roof.position = center + Vector3(0, 4, 0)
 	maze_roof.scale = Vector3(size_x, 1, size_z)
 
 func center_maze(maze_node: Node3D, is_generated: bool):
