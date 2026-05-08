@@ -32,6 +32,8 @@ script = ExtResource("2_kln2b")
 [node name="Maze" type="Node3D" parent="World" unique_id=1508511166]
 script = ExtResource("3_rgh2o")
 
+[node name="Exit" type="Node3D" parent="World" unique_id=969424883]
+
 [node name="PlayerSpawn" type="Node3D" parent="." unique_id=2085908481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 

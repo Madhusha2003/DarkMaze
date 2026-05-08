@@ -4,6 +4,7 @@ extends Node3D
 
 const WALL_SCENE = preload("res://World/Wall.tscn")
 const DOOR_SCENE = preload("res://World/Door.tscn")
+const EXIT_SCENE = preload("res://World/ExitGoal.tscn")
 
 @export var maze_width = 51
 @export var maze_height = 51
@@ -12,6 +13,7 @@ const DOOR_SCENE = preload("res://World/Door.tscn")
 @export var doors = 10
 
 var maze = []
+var exit_cell: Vector2i
 
 func _ready():
 	randomize()
@@ -73,12 +75,35 @@ func create_loops(loop_count):
 
 func add_random_exit():
 	var side = randi() % 4
+	var exit_pos = Vector2i()
 
 	match side:
-		0: maze[0][randi_range(1, maze_height-2)] = 0 # left
-		1: maze[maze_width-1][randi_range(1, maze_height-2)] = 0 # right
-		2: maze[randi_range(1, maze_width-2)][0] = 0 # top
-		3: maze[randi_range(1, maze_width-2)][maze_height-1] = 0 # bottom
+		0: # left
+			exit_pos = Vector2i(0, randi_range(1, maze_height - 2))
+		1: # right
+			exit_pos = Vector2i(maze_width - 1, randi_range(1, maze_height - 2))
+		2: # top
+			exit_pos = Vector2i(randi_range(1, maze_width - 2), 0)
+		3: # bottom
+			exit_pos = Vector2i(randi_range(1, maze_width - 2), maze_height - 1)
+
+	# Open wall
+	maze[exit_pos.x][exit_pos.y] = 0
+
+	# Store exit position for spawning
+	exit_cell = exit_pos
+	
+	spawn_exit()
+	
+func spawn_exit():
+	var exit = EXIT_SCENE.instantiate()
+	add_child(exit)
+
+	exit.position = Vector3(
+		exit_cell.x * wall_spacing,
+		0,
+		exit_cell.y * wall_spacing
+	)
 
 func build_maze():
 	for x in range(maze_width):

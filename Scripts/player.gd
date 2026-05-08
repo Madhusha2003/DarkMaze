@@ -16,6 +16,8 @@ var bob_amount = 0.05
 
 var flashlight_on = false
 
+var dev_fly_mode = false
+
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
@@ -47,9 +49,14 @@ func _input(event):
 
 func _physics_process(delta):
 	var is_moving = Vector2(velocity.x, velocity.z).length() > 0.1
+	var current_speed = SPEED
 	# Gravity
-	if not is_on_floor():
+	if not is_on_floor() and not dev_fly_mode:
 		velocity.y -= gravity * delta
+	elif dev_fly_mode:
+		velocity.y = 0
+		current_speed *= 2.5 # Fly mode is faster
+
 
 	# Movement input
 	var input_dir = Vector3.ZERO
@@ -62,6 +69,10 @@ func _physics_process(delta):
 		input_dir.z -= 1
 	if Input.is_action_pressed("ui_up"):
 		input_dir.z += 1
+	if Input.is_action_pressed("run"):
+		current_speed = SPEED * 1.5
+		if dev_fly_mode:
+			current_speed = SPEED * 3.75 # Fly mode run is even faster
 
 	input_dir = input_dir.normalized()
 
@@ -71,8 +82,8 @@ func _physics_process(delta):
 
 	var direction = (right * input_dir.x) + (forward * input_dir.z)
 
-	velocity.x = direction.x * SPEED
-	velocity.z = direction.z * SPEED
+	velocity.x = direction.x * current_speed
+	velocity.z = direction.z * current_speed
 
 	if is_moving and is_on_floor():
 		bob_time += delta * bob_speed
