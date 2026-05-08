@@ -26,7 +26,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.3)
 
 [node name="FlashLight" type="SpotLight3D" parent="CameraPivot/Camera3D" unique_id=1579038150]
 visible = false
-light_energy = 3.0
+light_energy = 1.5
 shadow_enabled = true
+shadow_bias = 0.75
 spot_range = 12.0
 spot_angle = 40.0

@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b1rr2ou1e1ohn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38krd"]
+albedo_color = Color(0, 0.49666095, 0.94037527, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_38krd"]
+material = SubResource("StandardMaterial3D_38krd")
+size = Vector3(0.2, 3.5, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8dnas"]
+size = Vector3(0.2, 3, 2)
+
+[node name="Door" type="StaticBody3D" unique_id=495210777]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=726507722]
+mesh = SubResource("BoxMesh_38krd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=350043930]
+shape = SubResource("BoxShape3D_8dnas")

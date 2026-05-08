@@ -5,10 +5,10 @@ extends Node3D
 
 @export var dev_mode = false
 
-const MAZE_SCENE = preload("res://World/Maze.tscn")
 
 func _ready():
-	pass
+	world.generate_maze()
+	spawn_player()
 
 func _input(event):
 	# Only allow export if dev_mode is true
@@ -24,44 +24,9 @@ func export_current_maze():
 	else:
 		print("No valid maze found to export.")
 
-func load_and_center_maze():
-	# Remove old maze if exists
-	for child in world.get_children():
-		child.queue_free()
-
-	# Load maze scene
-	var maze = MAZE_SCENE.instantiate()
-	world.add_child(maze)
-
-	# Wait one frame so children are fully loaded
-	await get_tree().process_frame
-
-	# Calculate bounds from all wall positions
-	var min_pos = Vector3(INF, INF, INF)
-	var max_pos = Vector3(-INF, -INF, -INF)
-
-	for wall in maze.get_children():
-		if wall is Node3D:
-			var pos = wall.position
-			min_pos.x = min(min_pos.x, pos.x)
-			min_pos.z = min(min_pos.z, pos.z)
-
-			max_pos.x = max(max_pos.x, pos.x)
-			max_pos.z = max(max_pos.z, pos.z)
-
-	# Center offset
-	var maze_center = (min_pos + max_pos) / 2.0
-
-	maze.position = Vector3(
-		-maze_center.x,
-		2,
-		-maze_center.z
-	)
-
-	# Place player near maze entrance
-	player_spawn.position = maze.position + Vector3(
-		min_pos.x + 2,
+func spawn_player():
+	player_spawn.position = Vector3(
+		position.x,
 		1,
-		min_pos.z + 2
+		position.z
 	)
-

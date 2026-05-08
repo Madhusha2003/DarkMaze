@@ -3,17 +3,18 @@ extends Node3D
 @onready var player_spawn = $"../../PlayerSpawn"
 
 const WALL_SCENE = preload("res://World/Wall.tscn")
+const DOOR_SCENE = preload("res://World/Door.tscn")
 
 @export var maze_width = 51
 @export var maze_height = 51
 @export var wall_spacing = 2.0
 @export var loops = 30.0
+@export var doors = 10
 
 var maze = []
 
 func _ready():
 	randomize()
-	generate_maze()
 
 func generate_maze():
 	clear_maze()
@@ -22,9 +23,8 @@ func generate_maze():
 	carve_passages(1, 1)
 	create_loops(maze_width * maze_height / loops)
 	add_random_exit()
+	spawn_doors(doors)
 	build_maze()
-
-	center_maze()
 
 func clear_maze():
 	for child in get_children():
@@ -67,7 +67,6 @@ func create_loops(loop_count):
 
 		# Only break walls
 		if maze[x][z] == 1:
-
 			# Avoid destroying borders
 			if x % 2 == 1 or z % 2 == 1:
 				maze[x][z] = 0
@@ -104,11 +103,55 @@ func center_maze():
 		-total_height / 2
 	)
 
-	player_spawn.position = position + Vector3(
-		wall_spacing,
-		1,
-		wall_spacing
+# ---------------
+# Doors
+# ---------------
+func spawn_doors(count):
+	var possible_positions = []
+
+	for x in range(1, maze_width - 1):
+		for z in range(1, maze_height - 1):
+
+			if maze[x][z] != 1:
+				continue
+
+			# Vertical wall
+			if maze[x][z - 1] == 1 and maze[x][z + 1] == 1 and maze[x - 1][z] == 0 and maze[x + 1][z] == 0:
+				possible_positions.append({
+					"x": x,
+					"z": z,
+					"rotation": 0
+				})
+
+			# Horizontal wall
+			elif maze[x - 1][z] == 1 and maze[x + 1][z] == 1 and maze[x][z - 1] == 0 and maze[x][z + 1] == 0:
+				possible_positions.append({
+					"x": x,
+					"z": z,
+					"rotation": 90
+				})
+
+	possible_positions.shuffle()
+
+	for i in range(min(count, possible_positions.size())):
+		var door_data = possible_positions[i]
+		spawn_door(door_data.x, door_data.z, door_data.rotation)
+
+
+func spawn_door(x, z, rotation_deg):
+	var door = DOOR_SCENE.instantiate()
+	add_child(door)
+
+	door.position = Vector3(
+		x * wall_spacing,
+		0,
+		z * wall_spacing
 	)
+
+	door.rotation_degrees.y = rotation_deg
+
+	# Remove wall from maze data
+	maze[x][z] = 0
 
 func export_to_scene():
 	# 1. Create a new PackedScene object

@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://co5klatx3r4ox" path="res://Scripts/game.gd" id="1_kln2b"]
 [ext_resource type="PackedScene" uid="uid://dwid3ie2v2t60" path="res://Player/Player.tscn" id="1_r150o"]
-[ext_resource type="Script" uid="uid://drdnkhw7m8v4v" path="res://Scripts/maze.gd" id="2_kln2b"]
+[ext_resource type="Script" uid="uid://c7g4u7cwb0b2v" path="res://Scripts/world.gd" id="2_kln2b"]
+[ext_resource type="Script" uid="uid://drdnkhw7m8v4v" path="res://Scripts/maze.gd" id="3_rgh2o"]
 
 [sub_resource type="Environment" id="Environment_c1w88"]
 ambient_light_source = 2
@@ -14,7 +15,11 @@ fog_density = 0.02
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_idj7w"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rgh2o"]
+albedo_color = Color(0.1288298, 0.12882978, 0.12882978, 1)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_kln2b"]
+material = SubResource("StandardMaterial3D_rgh2o")
 size = Vector2(100, 100)
 
 [node name="Main" type="Node3D" unique_id=1243551965]
@@ -22,9 +27,10 @@ script = ExtResource("1_kln2b")
 dev_mode = true
 
 [node name="World" type="Node3D" parent="." unique_id=1143953887]
+script = ExtResource("2_kln2b")
 
 [node name="Maze" type="Node3D" parent="World" unique_id=1508511166]
-script = ExtResource("2_kln2b")
+script = ExtResource("3_rgh2o")
 
 [node name="PlayerSpawn" type="Node3D" parent="." unique_id=2085908481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -32,9 +38,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="Player" parent="PlayerSpawn" unique_id=2341688 instance=ExtResource("1_r150o")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=869707311]
-transform = Transform3D(1, 0, 0, 0, -0.42261833, 0.90630776, 0, -0.90630776, -0.42261833, 0, 0, 0)
-light_energy = 2.105
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
+light_color = Color(0.101960786, 0.07058824, 0.0627451, 1)
 shadow_enabled = true
+shadow_opacity = 0.75
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="DirectionalLight3D" unique_id=1709105388]
 environment = SubResource("Environment_c1w88")
