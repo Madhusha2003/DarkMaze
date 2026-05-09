@@ -11,7 +11,10 @@ var bob_time = 0.0
 var bob_speed = 8.0
 var bob_amount = 0.05
 
+var interact_distance = 3.0
+
 @onready var camera_pivot = $CameraPivot
+@onready var camera = $CameraPivot/Camera3D
 @onready var flashlight = $CameraPivot/Camera3D/FlashLight
 
 var flashlight_on = false
@@ -46,6 +49,8 @@ func _input(event):
 		if event.keycode == KEY_F:
 			flashlight_on = !flashlight_on
 			flashlight.visible = flashlight_on
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		_try_interact()
 
 func _physics_process(delta):
 	var is_moving = Vector2(velocity.x, velocity.z).length() > 0.1
@@ -95,3 +100,30 @@ func _physics_process(delta):
 		camera_pivot.position.y = lerp(camera_pivot.position.y, 1.6, delta * 5)
 
 	move_and_slide()
+
+func _try_interact():
+	# Only interact when mouse is captured (playing)
+	if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+		return
+	
+	var space = get_world_3d().direct_space_state
+	var from = camera.global_position
+	var to = from + (-camera.global_transform.basis.z * interact_distance)
+	
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.exclude = [self]
+	
+	var result = space.intersect_ray(query)
+	
+	if result and result.collider:
+		var door = _find_door(result.collider)
+		if door:
+			door.interact()
+
+func _find_door(node: Node) -> Node:
+	var current = node
+	while current and current != get_tree().root:
+		if current.has_method("interact"):
+			return current
+		current = current.get_parent()
+	return null

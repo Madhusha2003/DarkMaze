@@ -51,22 +51,22 @@ A first-person atmospheric maze exploration game built in **Godot Engine**, focu
 # 🚧 Roadmap
 
 ## 🟢 Phase 1 — Core Gameplay (Current)
-- [Done] Player movement system
-- [Done] Mouse look system
-- [Done] Flashlight system
-- [Done] Dark environment setup
-- [Done] Maze wall construction
-- [Done] Basic level layout
-- [Done] Random Maze generation
-- [Done] Simple collision-based maze
+- [x] Player movement system
+- [x] Mouse look system
+- [x] Flashlight system
+- [x] Dark environment setup
+- [x] Maze wall construction
+- [x] Basic level layout
+- [x] Random Maze generation
+- [x] Simple collision-based maze
 
 ---
 
 ## 🟡 Phase 2 — Gameplay Loop
-- [Done] Exit/goal system (win condition)
+- [x] Exit/goal system (win condition)
 - [ ] Basic UI (start / restart)
 - [ ] Multiple rooms / levels
-- [InProgress] Key & door interaction system
+- [x] Key & door interaction system
 
 ---
 

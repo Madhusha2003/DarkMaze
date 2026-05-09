@@ -6,12 +6,15 @@ extends Node3D
 
 @export var dev_mode = false
 
-
 func _ready():
-	world.generate_maze()
+	world.generate_world()
 	spawn_player()
 	connect_maze_signals()
 	player.dev_fly_mode = dev_mode
+
+	if dev_mode:
+		print("Developer mode is ON. Press 'P' to export the maze, 'R' to regenerate, and SPACE/CTRL to fly up/down.")
+		Inventory.keys = 999 # Give player lots of keys for testing
 
 func _input(event):
 	# Only allow export if dev_mode is true
@@ -19,7 +22,7 @@ func _input(event):
 		if event.keycode == KEY_P: # Press 'P' to export
 			export_current_maze()
 		if event.keycode == KEY_R: # Press 'R' to regenerate
-			world.generate_maze()
+			world.generate_world()
 			connect_maze_signals()
 			spawn_player()
 		if event.keycode == KEY_SPACE: # Fly mode
@@ -42,8 +45,11 @@ func spawn_player():
 		position.z
 	)
 func connect_maze_signals():
-	var maze = world.get_child(0)
+	var maze = world.maze
 	if maze:
+		 # Disconnect first if already connected, then reconnect cleanly
+		if maze.player_won_global.is_connected(_on_player_win):
+			maze.player_won_global.disconnect(_on_player_win)
 		maze.player_won_global.connect(_on_player_win)
 
 func _on_player_win():

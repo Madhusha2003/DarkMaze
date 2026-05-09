@@ -29,4 +29,5 @@ visible = false
 light_color = Color(1, 1, 0.88235295, 1)
 shadow_enabled = true
 shadow_bias = 0.75
+shadow_opacity = 0.75
 spot_range = 10.0

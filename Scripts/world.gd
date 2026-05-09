@@ -10,10 +10,13 @@ const MAZE_SCENE = preload("res://World/Maze.tscn")
 func _ready():
 	pass
 
-func generate_maze():
+func generate_world():
 	maze.generate_maze()
 	center_maze(maze, true)
 	update_world_size()
+
+	print("maze.position = ", maze.position)
+	print("first wall position = ", maze.get_child(0).position)
 
 func update_world_size():
 	var size_x = (maze.maze_width) * maze.wall_spacing
