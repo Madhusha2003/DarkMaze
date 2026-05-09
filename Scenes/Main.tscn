@@ -5,8 +5,10 @@
 [ext_resource type="Script" uid="uid://c7g4u7cwb0b2v" path="res://Scripts/world.gd" id="2_kln2b"]
 [ext_resource type="Script" uid="uid://drdnkhw7m8v4v" path="res://Scripts/maze.gd" id="3_rgh2o"]
 [ext_resource type="PackedScene" uid="uid://bbjcbjhhlx46w" path="res://World/Celling.tscn" id="4_v1gob"]
+[ext_resource type="Script" uid="uid://dofbe313evwmd" path="res://Scripts/ItemManager.gd" id="5_50glp"]
 [ext_resource type="PackedScene" uid="uid://dycbhmsk5v5pp" path="res://World/Floor.tscn" id="5_jw32o"]
 [ext_resource type="Script" uid="uid://bejrnifmpln5s" path="res://Scripts/DoorManager.gd" id="6_jw32o"]
+[ext_resource type="PackedScene" uid="uid://bx5i0juscodr1" path="res://UI/StartMenu.tscn" id="9_vy5pj"]
 
 [sub_resource type="Environment" id="Environment_c1w88"]
 ambient_light_source = 2
@@ -39,8 +41,10 @@ script = ExtResource("3_rgh2o")
 [node name="DoorManager" type="Node3D" parent="World/Maze" unique_id=111561038]
 script = ExtResource("6_jw32o")
 
+[node name="ItemManager" type="Node3D" parent="World/Maze" unique_id=531996493]
+script = ExtResource("5_50glp")
+
 [node name="Ceiling" parent="World" unique_id=1480429824 instance=ExtResource("4_v1gob")]
-visible = false
 
 [node name="Floor" parent="World" unique_id=385862574 instance=ExtResource("5_jw32o")]
 
@@ -51,7 +55,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=869707311]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
-visible = false
 light_energy = 0.5
 shadow_enabled = true
 
@@ -66,3 +69,5 @@ shape = SubResource("WorldBoundaryShape3D_idj7w")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Base" unique_id=1063358565]
 mesh = SubResource("PlaneMesh_kln2b")
+
+[node name="StartMenu" parent="." unique_id=1444016989 instance=ExtResource("9_vy5pj")]

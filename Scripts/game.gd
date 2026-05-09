@@ -3,18 +3,31 @@ extends Node3D
 @onready var world = $World
 @onready var player_spawn = $PlayerSpawn
 @onready var player = $PlayerSpawn/Player
+@onready var start_menu = $StartMenu
 
 @export var dev_mode = false
 
 func _ready():
-	world.generate_world()
-	spawn_player()
-	connect_maze_signals()
+	start_menu.visible = true
+	get_tree().paused = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	start_menu.start_game.connect(start_new_game)
+
 	player.dev_fly_mode = dev_mode
 
 	if dev_mode:
 		print("Developer mode is ON. Press 'P' to export the maze, 'R' to regenerate, and SPACE/CTRL to fly up/down.")
 		Inventory.keys = 999 # Give player lots of keys for testing
+
+
+func start_new_game():
+	start_menu.visible = false
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Generate the world and spawn the player
+	world.generate_world()
+	spawn_player()
+	connect_maze_signals()
 
 func _input(event):
 	# Only allow export if dev_mode is true

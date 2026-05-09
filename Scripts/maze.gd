@@ -2,6 +2,7 @@ extends Node3D
 
 @onready var player_spawn = $"../../PlayerSpawn"
 @onready var door_manager = $DoorManager
+@onready var item_manager = $ItemManager
 
 const WALL_SCENE = preload("res://World/Wall.tscn")
 const EXIT_SCENE = preload("res://World/ExitGoal.tscn")
@@ -29,10 +30,11 @@ func generate_maze():
 		add_random_exit()	
 	door_manager.spawn_doors(maze, maze_width, maze_height, wall_spacing, 10) # Spwan doors after exits so they can replace walls if needed
 	build_maze() # Build maze after doors so they can replace walls if needed
+	item_manager.spawn_items(maze, maze_width, maze_height, wall_spacing)
 
 func clear_maze():
 	for child in get_children():
-		if child == door_manager:
+		if child == door_manager or child == item_manager:
 			continue  # don't free the door manager
 		child.queue_free()
 	
