@@ -7,18 +7,35 @@ extends Node3D
 
 @export var dev_mode = false
 
+var regen_timer: Timer
+
 func _ready():
 	start_menu.visible = true
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	start_menu.start_game.connect(start_new_game)
+	
+	setup_regen_timer()
 
 	player.is_dev_mode = dev_mode
 
 	if dev_mode:
 		print("Developer mode is ON. Press 'P' to export the maze, 'R' to regenerate, and SPACE/CTRL to fly up/down.")
 		Inventory.keys = 999 # Give player lots of keys for testing
+		Inventory.batteries = 999 # Give player lots of batteries for testing
 
+func setup_regen_timer():
+	regen_timer = Timer.new()
+	regen_timer.wait_time = 600.0 # 10 minutes
+	regen_timer.one_shot = false
+	regen_timer.timeout.connect(_on_regen_timer_timeout)
+	add_child(regen_timer)
+
+func _on_regen_timer_timeout():
+	print("10 minutes passed. Regenerating maze...")
+	world.generate_world()
+	spawn_player()
+	connect_maze_signals()
 
 func start_new_game():
 	start_menu.visible = false
@@ -28,13 +45,14 @@ func start_new_game():
 	world.generate_world()
 	spawn_player()
 	connect_maze_signals()
+	regen_timer.start()
 
 func _input(event):
 	# Only allow export if dev_mode is true
 	if dev_mode and event is InputEventKey and event.is_pressed():
 		if event.keycode == KEY_P: # Press 'P' to export
 			export_current_maze()
-		if event.keycode == KEY_R and event.keycode == KEY_SHIFT: # Press 'SHIFT + R' to regenerate
+		if event.keycode == KEY_X: # Press 'X' to regenerate
 			world.generate_world()
 			connect_maze_signals()
 			spawn_player()

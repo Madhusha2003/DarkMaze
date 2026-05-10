@@ -30,9 +30,9 @@ func generate_maze():
 	initialize_grid()
 	carve_passages(1, 1)
 	create_loops(maze_width * maze_height / loops)
-	for i in range(3):	
+	for i in range(2):	
 		add_random_exit()	
-	door_manager.spawn_doors(maze, maze_width, maze_height, wall_spacing, 10) # Spwan doors after exits so they can replace walls if needed
+	door_manager.spawn_doors(maze, maze_width, maze_height, wall_spacing, doors) # Spwan doors after exits so they can replace walls if needed
 	build_maze() # Build maze after doors so they can replace walls if needed
 	item_manager.spawn_items(maze, maze_width, maze_height, wall_spacing)
 
@@ -88,18 +88,27 @@ func create_loops(loop_count):
 				maze[x][z] = Globals.CELL_PATH
 
 func add_random_exit():
-	var side = randi() % 4
 	var exit_pos = Vector2i()
+	var player_grid_pos = Vector2i(maze_width / 2, maze_height / 2)
+	var min_distance = (maze_width + maze_height) / 4.0 # Roughly 25% of the total dimensions
 
-	match side:
-		0: # left
-			exit_pos = Vector2i(0, randi_range(1, maze_height - 2))
-		1: # right
-			exit_pos = Vector2i(maze_width - 1, randi_range(1, maze_height - 2))
-		2: # top
-			exit_pos = Vector2i(randi_range(1, maze_width - 2), 0)
-		3: # bottom
-			exit_pos = Vector2i(randi_range(1, maze_width - 2), maze_height - 1)
+	var found_valid_exit = false
+	while not found_valid_exit:
+		var side = randi() % 4
+		match side:
+			0: # left
+				exit_pos = Vector2i(0, randi_range(1, maze_height - 2))
+			1: # right
+				exit_pos = Vector2i(maze_width - 1, randi_range(1, maze_height - 2))
+			2: # top
+				exit_pos = Vector2i(randi_range(1, maze_width - 2), 0)
+			3: # bottom
+				exit_pos = Vector2i(randi_range(1, maze_width - 2), maze_height - 1)
+		
+		# Check Manhattan distance from center
+		var dist = abs(exit_pos.x - player_grid_pos.x) + abs(exit_pos.y - player_grid_pos.y)
+		if dist >= min_distance:
+			found_valid_exit = true
 
 	# Open wall and mark as exit
 	maze[exit_pos.x][exit_pos.y] = Globals.CELL_EXIT

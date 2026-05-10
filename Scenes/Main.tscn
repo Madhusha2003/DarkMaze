@@ -30,6 +30,7 @@ size = Vector2(100, 100)
 
 [node name="Main" type="Node3D" unique_id=1243551965]
 script = ExtResource("1_kln2b")
+dev_mode = true
 
 [node name="World" type="Node3D" parent="." unique_id=1143953887]
 script = ExtResource("2_kln2b")
