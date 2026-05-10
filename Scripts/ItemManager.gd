@@ -3,9 +3,12 @@ extends Node3D
 const KEY_SCENE = preload("res://World/Items/Key.tscn")
 const BATTERY_SCENE = preload("res://World/Items/Battery.tscn")
 
+@export var min_item_distance: float = 6.0 # Minimum distance between spawned items
+
 var pending_spawn: Array = []
 var wall_spacing: float = 0.0
 var maze_ref: Array = []
+var spawned_positions: Array[Vector2i] = []
 
 
 func spawn_items(maze_data: Array, width: int, height: int, spacing: float):
@@ -31,16 +34,30 @@ func clear_items():
 	print("ItemManager cleared:", get_child_count(), "items")
 	for child in get_children():
 		child.queue_free()
+	spawned_positions.clear()
 
 
 func _spawn(scene: PackedScene, count: int, cells: Array, spacing: float, label: String):
-	var limit = min(count, cells.size())
 	var spawned = 0
-
-	for i in range(limit):
+	var i = 0
+	
+	while spawned < count and i < cells.size():
 		var cell = cells[i]
-		var item = scene.instantiate()
+		i += 1
 		
+		# Check distance against all already spawned positions
+		var too_close = false
+		for pos in spawned_positions:
+			var world_pos = Vector2(cell.x * spacing, cell.y * spacing)
+			var other_pos = Vector2(pos.x * spacing, pos.y * spacing)
+			if world_pos.distance_to(other_pos) < min_item_distance:
+				too_close = true
+				break
+		
+		if too_close:
+			continue
+
+		var item = scene.instantiate()
 		item.position = Vector3(
 			cell.x * spacing,
 			-0.5,
@@ -48,12 +65,13 @@ func _spawn(scene: PackedScene, count: int, cells: Array, spacing: float, label:
 		)
 		
 		add_child(item)
+		spawned_positions.append(cell)
 		
 		# Mark the maze array
 		if maze_ref.size() > 0:
 			maze_ref[cell.x][cell.y] = Globals.CELL_ITEM
 
-		print(label, i, "->", item.position , "| ->" , item.global_position)
+		print(label, spawned, "->", item.position , "| ->" , item.global_position)
 		spawned += 1
 
 	print(label, "spawned:", spawned, "/", count)
