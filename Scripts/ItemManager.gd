@@ -4,11 +4,13 @@ const KEY_SCENE = preload("res://World/Key.tscn")
 
 var pending_spawn: Array = []
 var wall_spacing: float = 0.0
+var maze_ref: Array = []
 
 
 func spawn_items(maze_data: Array, width: int, height: int, spacing: float):
 	clear_items()
 
+	maze_ref = maze_data
 	wall_spacing = spacing
 	pending_spawn = _get_open_cells(maze_data, width, height)
 	pending_spawn.shuffle()
@@ -36,13 +38,18 @@ func _spawn(scene: PackedScene, count: int, cells: Array, spacing: float, label:
 	for i in range(limit):
 		var cell = cells[i]
 		var item = scene.instantiate()
-		add_child(item)
-
+		
 		item.position = Vector3(
 			cell.x * spacing,
-			0.5,
+			-0.5,
 			cell.y * spacing
 		)
+		
+		add_child(item)
+		
+		# Mark the maze array
+		if maze_ref.size() > 0:
+			maze_ref[cell.x][cell.y] = Globals.CELL_ITEM
 
 		print(label, i, "->", item.position , "| ->" , item.global_position)
 		spawned += 1
@@ -62,7 +69,7 @@ func _get_open_cells(maze_data: Array, width: int, height: int) -> Array:
 	for x in range(1, width - 1):
 		for z in range(1, height - 1):
 
-			if maze_data[x][z] != 0:
+			if maze_data[x][z] != Globals.CELL_PATH:
 				skipped_wall += 1
 				continue
 

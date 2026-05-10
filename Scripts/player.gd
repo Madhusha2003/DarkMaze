@@ -17,11 +17,14 @@ var interact_distance = 3.0
 @onready var camera = $CameraPivot/Camera3D
 @onready var flashlight = $CameraPivot/Camera3D/FlashLight
 
+@onready var maze = get_tree().get_first_node_in_group("maze")
+
 var flashlight_on = false
 
 var dev_fly_mode = false
 
 func _ready():
+	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -49,6 +52,11 @@ func _input(event):
 		if event.keycode == KEY_F:
 			flashlight_on = !flashlight_on
 			flashlight.visible = flashlight_on
+		
+		# Trail Logic
+		if event.keycode == KEY_G:
+			if maze and maze.has_method("spawn_trail"):
+				maze.spawn_trail(global_position)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		_try_interact()
 
@@ -112,15 +120,16 @@ func _try_interact():
 	
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	query.exclude = [self]
+	query.collide_with_areas = true
 	
 	var result = space.intersect_ray(query)
 	
 	if result and result.collider:
-		var door = _find_door(result.collider)
-		if door:
-			door.interact()
+		var interactable_item = _find_interactable(result.collider)
+		if interactable_item:
+			interactable_item.interact()
 
-func _find_door(node: Node) -> Node:
+func _find_interactable(node: Node) -> Node:
 	var current = node
 	while current and current != get_tree().root:
 		if current.has_method("interact"):

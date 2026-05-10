@@ -8,18 +8,17 @@ var start_y: float = 0.0
 var time_passed: float = 0.0
 
 func _ready():
-	call_deferred("_init_positions")
+	call_deferred("_init_positions")	
 	# Connect the body_entered signal to allow picking up by walking into it
 	body_entered.connect(_on_body_entered)
 
-	while true:
-		await get_tree().create_timer(5.0).timeout
-		print("Key position:", global_position, "| Local:", position)
-
 func _init_positions():
 	start_y = global_position.y
+		# Adjust mesh position to center it (AABB indicates it's offset in the model)
+	if has_node("Mesh"):
+		$Mesh.position.y = 0.31
 
-func _process(delta):
+func _physics_process(delta):
 	# Spin the key
 	rotation.y += ROTATION_SPEED * delta
 	
@@ -28,7 +27,8 @@ func _process(delta):
 	global_position.y = start_y + sin(time_passed * BOB_SPEED) * BOB_HEIGHT
 
 func _on_body_entered(body):
-	if body.name == "Player":
+	if body.is_in_group("player"):
+		print("Key collected by: ", body.name)
 		Inventory.add_key()
 		queue_free()
 

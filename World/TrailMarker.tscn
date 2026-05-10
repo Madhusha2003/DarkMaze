@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://3f0agur1hxgo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o1sfw"]
+shading_mode = 0
+albedo_color = Color(0.2509804, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_rsyrx"]
+material = SubResource("StandardMaterial3D_o1sfw")
+radius = 0.05
+height = 0.1
+
+[node name="TrailMarker" type="Node3D" unique_id=2051749215]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=717188110]
+mesh = SubResource("SphereMesh_rsyrx")
