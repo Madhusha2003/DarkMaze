@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://b1cv7ygbp2qx0"]
+
+[ext_resource type="Script" uid="uid://bsrjufit88dkg" path="res://Scripts/battery.gd" id="1_wy47r"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_e4enf"]
+height = 0.5
+radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e4enf"]
+albedo_color = Color(0.8156863, 1, 0.38431373, 1)
+metallic = 0.5
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wy47r"]
+material = SubResource("StandardMaterial3D_e4enf")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.5
+
+[node name="Battery" type="StaticBody3D" unique_id=1245979689]
+script = ExtResource("1_wy47r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=794102436]
+shape = SubResource("CylinderShape3D_e4enf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1279026936]
+mesh = SubResource("CylinderMesh_wy47r")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bls342jhblo65"]
 
-[ext_resource type="PackedScene" uid="uid://2d704f72d7nd" path="res://World/Wall.tscn" id="1_o74uv"]
+[ext_resource type="PackedScene" uid="uid://2d704f72d7nd" path="res://World/Maze/Wall.tscn" id="1_o74uv"]
 
 [node name="Maze" type="Node3D" unique_id=659260204]
 

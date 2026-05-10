@@ -1,6 +1,7 @@
 extends Node3D
 
-const KEY_SCENE = preload("res://World/Key.tscn")
+const KEY_SCENE = preload("res://World/Items/Key.tscn")
+const BATTERY_SCENE = preload("res://World/Items/Battery.tscn")
 
 var pending_spawn: Array = []
 var wall_spacing: float = 0.0
@@ -23,6 +24,7 @@ func spawn_items(maze_data: Array, width: int, height: int, spacing: float):
 
 func _do_spawn():
 	_spawn(KEY_SCENE, 10, pending_spawn, wall_spacing, "Key")
+	_spawn(BATTERY_SCENE, 15, pending_spawn, wall_spacing, "Battery")
 
 
 func clear_items():

@@ -4,9 +4,9 @@ extends Node3D
 @onready var door_manager = $DoorManager
 @onready var item_manager = $ItemManager
 
-const WALL_SCENE = preload("res://World/Wall.tscn")
-const EXIT_SCENE = preload("res://World/ExitGoal.tscn")
-const TRAIL_MARKER = preload("res://World/TrailMarker.tscn")
+const WALL_SCENE = preload("res://World/Maze/Wall.tscn")
+const EXIT_SCENE = preload("res://World/Maze/ExitGoal.tscn")
+const TRAIL_MARKER = preload("res://World/Maze/TrailMarker.tscn")
 
 @export var maze_width = 51
 @export var maze_height = 51

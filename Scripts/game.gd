@@ -13,7 +13,7 @@ func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	start_menu.start_game.connect(start_new_game)
 
-	player.dev_fly_mode = dev_mode
+	player.is_dev_mode = dev_mode
 
 	if dev_mode:
 		print("Developer mode is ON. Press 'P' to export the maze, 'R' to regenerate, and SPACE/CTRL to fly up/down.")
@@ -34,7 +34,7 @@ func _input(event):
 	if dev_mode and event is InputEventKey and event.is_pressed():
 		if event.keycode == KEY_P: # Press 'P' to export
 			export_current_maze()
-		if event.keycode == KEY_R: # Press 'R' to regenerate
+		if event.keycode == KEY_R and event.keycode == KEY_SHIFT: # Press 'SHIFT + R' to regenerate
 			world.generate_world()
 			connect_maze_signals()
 			spawn_player()

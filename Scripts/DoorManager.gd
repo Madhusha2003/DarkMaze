@@ -1,6 +1,6 @@
 extends Node3D
 
-const DOOR_SCENE = preload("res://World/Door.tscn")
+const DOOR_SCENE = preload("res://World/Maze/Door.tscn")
 
 func spawn_doors(maze_data: Array, maze_width: int, maze_height: int, 
 				 wall_spacing: float, count: int):  # no maze_origin

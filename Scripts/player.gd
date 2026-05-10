@@ -20,8 +20,14 @@ var interact_distance = 3.0
 @onready var maze = get_tree().get_first_node_in_group("maze")
 
 var flashlight_on = false
+var flashlight_energy = 100.0
+var max_flashlight_energy = 100.0
+var battery_refill_amount = 50.0
+var energy_consumption_rate = 5.0 # Energy per second
 
-var dev_fly_mode = false
+signal flashlight_energy_changed(current, max)
+
+var is_dev_mode = false
 
 func _ready():
 	add_to_group("player")
@@ -50,11 +56,27 @@ func _input(event):
 		
 		# Flashlight Logic
 		if event.keycode == KEY_F:
-			flashlight_on = !flashlight_on
-			flashlight.visible = flashlight_on
+			if flashlight_energy > 0 or not flashlight_on:
+				flashlight_on = !flashlight_on
+				flashlight.visible = flashlight_on
+			else:
+				flashlight_on = false
+				flashlight.visible = false
+		
+		# Manual Battery usage
+		if event.keycode == KEY_R:
+			if flashlight_energy < max_flashlight_energy:
+				if Inventory.use_battery():
+					flashlight_energy = min(flashlight_energy + battery_refill_amount, max_flashlight_energy)
+					emit_signal("flashlight_energy_changed", flashlight_energy, max_flashlight_energy)
+					print("Battery used manually. Energy: ", flashlight_energy)
+				else:
+					print("No batteries in inventory!")
+			else:
+				print("Flashlight energy already full.")
 		
 		# Trail Logic
-		if event.keycode == KEY_G:
+		if event.keycode == KEY_G and is_dev_mode:
 			if maze and maze.has_method("spawn_trail"):
 				maze.spawn_trail(global_position)
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -64,9 +86,9 @@ func _physics_process(delta):
 	var is_moving = Vector2(velocity.x, velocity.z).length() > 0.1
 	var current_speed = SPEED
 	# Gravity
-	if not is_on_floor() and not dev_fly_mode:
+	if not is_on_floor() and not is_dev_mode:
 		velocity.y -= gravity * delta
-	elif dev_fly_mode:
+	elif is_dev_mode:
 		velocity.y = 0
 		current_speed *= 2.5 # Fly mode is faster
 
@@ -84,7 +106,7 @@ func _physics_process(delta):
 		input_dir.z += 1
 	if Input.is_action_pressed("run"):
 		current_speed = SPEED * 1.5
-		if dev_fly_mode:
+		if is_dev_mode:
 			current_speed = SPEED * 3.75 # Fly mode run is even faster
 
 	input_dir = input_dir.normalized()
@@ -97,6 +119,22 @@ func _physics_process(delta):
 
 	velocity.x = direction.x * current_speed
 	velocity.z = direction.z * current_speed
+
+	# Flashlight energy consumption
+	if flashlight_on:
+		flashlight_energy -= energy_consumption_rate * delta
+		if flashlight_energy <= 0:
+			flashlight_energy = 0
+			# Check if we have batteries to use
+			if Inventory.use_battery():
+				flashlight_energy = battery_refill_amount
+				print("Battery used automatically. Energy: ", flashlight_energy)
+			else:
+				flashlight_on = false
+				flashlight.visible = false
+				print("Flashlight died! No batteries left.")
+		
+		emit_signal("flashlight_energy_changed", flashlight_energy, max_flashlight_energy)
 
 	if is_moving and is_on_floor():
 		bob_time += delta * bob_speed
